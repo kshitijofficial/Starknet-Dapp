@@ -61,6 +61,5 @@ Connect your wallet before interacting with the contract.
 ---
 
 ## 📸 Screenshots
-
----![image](https://github.com/user-attachments/assets/9a6ca59c-35b2-42c1-8221-af3709db7baa)
+![image](https://github.com/user-attachments/assets/19afe7d7-5607-4d51-88e1-f39effd7ba13)
 
