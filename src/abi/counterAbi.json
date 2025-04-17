@@ -1,0 +1,69 @@
+{
+    "abi": [
+        {
+            "type": "impl",
+            "name": "CounterImpl",
+            "interface_name": "counter::counter::ICounterContract"
+        },
+        {
+            "type": "interface",
+            "name": "counter::counter::ICounterContract",
+            "items": [
+                {
+                    "type": "function",
+                    "name": "get_counter",
+                    "inputs": [],
+                    "outputs": [
+                        {
+                            "type": "core::integer::u32"
+                        }
+                    ],
+                    "state_mutability": "view"
+                },
+                {
+                    "type": "function",
+                    "name": "increase_counter",
+                    "inputs": [],
+                    "outputs": [],
+                    "state_mutability": "external"
+                },
+                {
+                    "type": "function",
+                    "name": "set_counter",
+                    "inputs": [
+                        {
+                            "name": "new_counter",
+                            "type": "core::integer::u32"
+                        }
+                    ],
+                    "outputs": [],
+                    "state_mutability": "external"
+                }
+            ]
+        },
+        {
+            "type": "event",
+            "name": "counter::counter::counter_contract::CounterIncreased",
+            "kind": "struct",
+            "members": [
+                {
+                    "name": "value",
+                    "type": "core::integer::u32",
+                    "kind": "data"
+                }
+            ]
+        },
+        {
+            "type": "event",
+            "name": "counter::counter::counter_contract::Event",
+            "kind": "enum",
+            "variants": [
+                {
+                    "name": "CounterIncreased",
+                    "type": "counter::counter::counter_contract::CounterIncreased",
+                    "kind": "nested"
+                }
+            ]
+        }
+    ]
+}
