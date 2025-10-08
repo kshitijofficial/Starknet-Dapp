@@ -1,46 +1,67 @@
-import { connect } from '@starknet-io/get-starknet'; // v4.0.3 min
-import { WalletAccount } from 'starknet'; // v6.18.0 min
+import { connect } from '@starknet-io/get-starknet';
+import { WalletAccount } from 'starknet';
 import { useState } from "react"
-import GetCounter from "./components/Counter/GetCounter"
-import SetCounter from "./components/Counter/SetCounter"
+import RegistrationChecker from "./components/Voter/CheckRegistration"
 import './App.css'
+import VotingStatus from './components/Vote/VoteStatus';
+import VotingRightsChecker from './components/Voter/VotingRights';
+import VoterRegistration from './components/Voter/RegisterVoter';
+import VotingPanel from './components/Vote/Vote';
+import SessionKeysManager from './components/SessionKeys/SessionKeysManager';
 
-function App() {
-  const [account, setAccount] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const myFrontendProviderUrl = 'https://free-rpc.nethermind.io/sepolia-juno/v0_7';
-  // standard UI to select a wallet:
-  const handleConnectWallet = async () => {
+function StarkVoteApp() {
+  const [walletAccount, setWalletAccount] = useState(null);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [player, setPlayer] = useState(null);
+  const STARKNET_NODE_URL = "https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_8/6mRl0GGte48YLAvo45S4n";
+
+  // const STARKNET_NODE_URL = "http://127.0.0.1:5050";
+  const connectWallet = async () => {
     try {
-      const selected = await connect({ modalMode: 'alwaysAsk', modalTheme: 'dark' });
-      const account = await WalletAccount.connect(
-        { nodeUrl: myFrontendProviderUrl },
-        selected
+      const selectedWallet = await connect({ modalMode: 'alwaysAsk', modalTheme: 'dark' });
+      const connectedAccount = await WalletAccount.connect(
+        { nodeUrl: STARKNET_NODE_URL },
+        selectedWallet
       );
-      setIsConnected(true)
-      setAccount(account);
-    } catch (err) {
-      console.error("Failed to connect wallet", err);
-      alert("Could not connect to wallet. Check console.");
+
+      setIsWalletConnected(true)
+      setWalletAccount(connectedAccount);
+    } catch (error) {
+      console.error("Failed to connect wallet", error);
+      alert("Could not connect to wallet. Please check console for details.");
     }
   };
 
-
   return (
     <div className="app-container">
-      <h1 className="heading">Cairo Counter Contract</h1>
-      <SetCounter account={account} />
-      <GetCounter account={account} />
-      <div className="button-group">
-        {isConnected ? (
-          <button disabled style={{ cursor: "default", opacity: 0.6 }}>
-            ✅ Connected
+      <header className="app-header">
+        <h1 className="app-title">StarkVote</h1>
+        <p className="app-subtitle">Decentralized Voting Platform</p>
+      </header>
+
+      <div className="wallet-connection">
+        {isWalletConnected ? (
+          <div className="connection-status">
+            <div className="status-indicator"></div>
+            Wallet Connected
+          </div>
+        ) : (
+          <button className="btn btn-primary" onClick={connectWallet}>
+            Connect Wallet
           </button>
-        ) : (<button onClick={handleConnectWallet}>Connect</button>)}
+        )}
+      </div>
+
+      <div className="voting-dashboard">
+        <RegistrationChecker account={walletAccount} />
+        <VotingStatus account={walletAccount} />
+        <VotingRightsChecker account={walletAccount} />
+        <VoterRegistration account={walletAccount} />
+        <VotingPanel account={walletAccount} />
+        <SessionKeysManager player={player} setPlayer={setPlayer} />
       </div>
     </div>
-
   )
 }
 
-export default App
+export default StarkVoteApp
