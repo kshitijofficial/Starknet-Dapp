@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import controller from './controller';
 import { CONTRACT_ADDRESS } from '../../constants/contractAddress';
 
-const SessionKeysManager = ({ player, setPlayer }) => {
+const SessionKeysManager = ({ sessionAccount, setSessionAccount }) => {
     const [isConnecting, setIsConnecting] = useState(false);
     const [isVoting, setIsVoting] = useState(false);
     const [message, setMessage] = useState('');
 
-    const connectPlayer = async () => {
+    const connectWithSession = async () => {
         setIsConnecting(true);
         setMessage('');
         try {
             // Connect with session policies - this will show the policy approval screen
             const account = await controller.connect();
             console.log(account)
-            setPlayer(account);
+            setSessionAccount(account);
             setMessage('Successfully connected! Session policies approved.');
         } catch (error) {
             console.error('Connection failed:', error);
@@ -25,7 +25,7 @@ const SessionKeysManager = ({ player, setPlayer }) => {
     };
 
     const castVoteWithSession = async (voteChoice) => {
-        if (!player) {
+        if (!sessionAccount) {
             setMessage('Please connect first');
             return;
         }
@@ -34,7 +34,7 @@ const SessionKeysManager = ({ player, setPlayer }) => {
         setMessage('');
         try {
             // Execute vote transaction using session (no manual approval needed)
-            const result = await player.execute([
+            const result = await sessionAccount.execute([
                 {
                     contractAddress: CONTRACT_ADDRESS,
                     entrypoint: "vote",
@@ -54,7 +54,7 @@ const SessionKeysManager = ({ player, setPlayer }) => {
     };
 
     const registerVoterWithSession = async () => {
-        if (!player) {
+        if (!sessionAccount) {
             setMessage('Please connect first');
             return;
         }
@@ -63,11 +63,11 @@ const SessionKeysManager = ({ player, setPlayer }) => {
         setMessage('');
         try {
             // Execute voter registration using session
-            const result = await player.execute([
+            const result = await sessionAccount.execute([
                 {
                     contractAddress: CONTRACT_ADDRESS,
                     entrypoint: "register_voter",
-                    calldata: [player.address], // Register the connected account
+                    calldata: [sessionAccount.address], // Register the connected account
                 }
             ]);
 
@@ -85,15 +85,15 @@ const SessionKeysManager = ({ player, setPlayer }) => {
         <div className="session-manager">
             <div className="card-header">
                 <div className="card-icon">🔑</div>
-                <h3 className="card-title">Session Keys Manager</h3>
+                <h3 className="card-title">Session-Based Voting</h3>
             </div>
             <p className="card-description">
-                Connect with session policies to enable gasless transactions
+                Connect with Cartridge Controller to enable gasless voting transactions
             </p>
 
-            {!player ? (
+            {!sessionAccount ? (
                 <button
-                    onClick={connectPlayer}
+                    onClick={connectWithSession}
                     className={`btn ${isConnecting ? 'btn-loading' : 'btn-primary'}`}
                     disabled={isConnecting}
                 >
@@ -102,7 +102,7 @@ const SessionKeysManager = ({ player, setPlayer }) => {
             ) : (
                 <div>
                     <p className="status-display status-success">
-                        Connected: {player.address}
+                        Connected: {sessionAccount.address}
                     </p>
 
                     <div className="button-group">

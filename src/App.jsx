@@ -12,7 +12,7 @@ import SessionKeysManager from './components/SessionKeys/SessionKeysManager';
 function StarkVoteApp() {
   const [walletAccount, setWalletAccount] = useState(null);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [player, setPlayer] = useState(null);
+  const [sessionAccount, setSessionAccount] = useState(null);
   const STARKNET_NODE_URL = "https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_8/6mRl0GGte48YLAvo45S4n";
 
   // const STARKNET_NODE_URL = "http://127.0.0.1:5050";
@@ -58,7 +58,7 @@ function StarkVoteApp() {
         <VotingRightsChecker account={walletAccount} />
         <VoterRegistration account={walletAccount} />
         <VotingPanel account={walletAccount} />
-        <SessionKeysManager player={player} setPlayer={setPlayer} />
+        <SessionKeysManager sessionAccount={sessionAccount} setSessionAccount={setSessionAccount} />
       </div>
     </div>
   )
