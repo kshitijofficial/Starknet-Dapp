@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import controller from './controller';
+import cartridgeConnector from './controller';
 import { CONTRACT_ADDRESS } from '../../constants/contractAddress';
 
 const SessionKeysManager = ({ sessionAccount, setSessionAccount }) => {
@@ -10,9 +10,8 @@ const SessionKeysManager = ({ sessionAccount, setSessionAccount }) => {
     const connectWithSession = async () => {
         setIsConnecting(true);
         setMessage('');
-        try {
-            // Connect with session policies - this will show the policy approval screen
-            const account = await controller.connect();
+        try { 
+            const account = cartridgeConnector.controller.account;
             console.log(account)
             setSessionAccount(account);
             setMessage('Successfully connected! Session policies approved.');
