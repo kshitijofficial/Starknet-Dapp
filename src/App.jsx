@@ -18,15 +18,16 @@ function StarkVoteApp() {
   // const STARKNET_NODE_URL = "http://127.0.0.1:5050";
   const connectWallet = async () => {
     try {
-      const selectedWallet = await connect({ modalMode: 'alwaysAsk', modalTheme: 'dark' });
-      const connectedAccount = await WalletAccount.connect(
-        { nodeUrl: STARKNET_NODE_URL },
-        selectedWallet
-      );
-
-      setIsWalletConnected(true)
-      setWalletAccount(connectedAccount);
-    } catch (error) {
+       
+       try{
+        
+       }
+     catch (switchError) {
+        console.log("Network switch failed or rejected:", switchError);
+        alert("Please manually switch to Sepolia network in your wallet");
+      }
+    }
+    catch (error) {
       console.error("Failed to connect wallet", error);
       alert("Could not connect to wallet. Please check console for details.");
     }
